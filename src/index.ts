@@ -10,6 +10,12 @@ app.get('/', (req, res) => {
 // Corrected route definition
 app.get('/task', (req, res) => {
   res.send("New tasks");
+  
+});
+
+app.get('/new', (req, res) => {
+  res.send(" hello welcome to new page");
+  
 });
 
 app.listen(port, () => {
