@@ -1,8 +1,9 @@
 import express from 'express';
-
+const cors = require('cors');
 const app = express();
 const port = 3000;
 
+app.use(cors());
 
 // Import the route using ES module syntax (use `.js` if TypeScript outputs to JavaScript)
 import router from './routes/api'; // Assuming api.ts exists and compiles to api.js
