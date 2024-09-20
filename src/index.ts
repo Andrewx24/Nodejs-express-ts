@@ -1,9 +1,10 @@
 import express from 'express';
 import cors from 'cors';
-
+import axios from './request'
 const app = express();
 const port = 3000;
 
+console.log(axios)
 app.use(cors());
 
 // Import the route using ES module syntax (use `.js` if TypeScript outputs to JavaScript)
