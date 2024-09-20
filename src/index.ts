@@ -1,10 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import axios from './request'
-const app = express();
-const port = 3000;
+import axios from 'axios';
 
-console.log(axios)
+
+const app = express();
+const port = 5001;
+
 app.use(cors());
 
 // Import the route using ES module syntax (use `.js` if TypeScript outputs to JavaScript)
@@ -15,15 +16,24 @@ app.use('/api', router);
 
 // Basic route for the homepage
 app.get('/', (req, res) => {
- res.send('Hello, welcome to the homepage Node and Express.js with TypeScript');
+  res.send('Hello, welcome to the homepage of Node and Express.js with TypeScript');
+});
+
+
+app.get('/fetch-users', async (req, res) => {
+  try {
+    const response = await axios.get('https://nextjs-freestyle.vercel.app/api/users');
+    res.json(response.data); // Send the data to the client
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
 });
 
 // Route for "/task"
 app.get('/task', (req, res) => {
   res.json({
-    router
-  })
-
+    message: 'This is the task route',
+  });
 });
 
 // Route for "/new"
