@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
-
+import Google from './request';
 
 const app = express();
 const port = 5001;
@@ -19,10 +19,11 @@ app.use('/api', router);
 
 // Basic route for the homepage
 app.get('/', (req, res) => {
-  
-  res.send('Hello, welcome to the homepage of Node and Express.js with TypeScript and nodemon');
+ res.send('Hello, welcome to the homepage');
 });
-
+app.get('/google', (req, res) => {
+  res.send(Google);
+});
 
 app.get('/fetch-users', async (req, res) => {
   try {

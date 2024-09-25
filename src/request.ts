@@ -1,9 +1,11 @@
 import axios from 'axios';
 
+const Google = axios.get('https://www.google.com')
+  .then((res) => {
+    console.log(res.data);
+  })
+  .catch((err) => {
+    console.error('Error fetching data from Google:', err);
+  });
 
-axios.get('www.google.com').then((res) => {
-  console.log(res.data);
-})
-
-
-export default axios;
+export default Google;
