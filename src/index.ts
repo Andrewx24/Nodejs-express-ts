@@ -7,7 +7,10 @@ const app = express();
 const port = 5001;
 
 app.use(cors());
-
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+})
 // Import the route using ES module syntax (use `.js` if TypeScript outputs to JavaScript)
 import router from './routes/api'; // Assuming api.ts exists and compiles to api.js
 
@@ -16,7 +19,8 @@ app.use('/api', router);
 
 // Basic route for the homepage
 app.get('/', (req, res) => {
-  res.send('Hello, welcome to the homepage of Node and Express.js with TypeScript');
+  
+  res.send('Hello, welcome to the homepage of Node and Express.js with TypeScript and nodemon');
 });
 
 
@@ -32,6 +36,7 @@ app.get('/fetch-users', async (req, res) => {
 // Route for "/task"
 app.get('/task', (req, res) => {
   res.json({
+    numner: 1,
     message: 'This is the task route',
   });
 });
