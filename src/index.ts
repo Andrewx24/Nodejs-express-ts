@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
+import ani from './routes/hello';
 import Google from './request';
-
 const app = express();
 const port = 5001;
 
@@ -50,4 +50,8 @@ app.get('/new', (req, res) => {
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
+});
+
+app.get('/hello', (req, res) => {  
+  res.send(ani);
 });
