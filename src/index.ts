@@ -4,7 +4,7 @@ import axios from 'axios';
 import ani from './routes/hello';  // Ensure this file exports `ani` properly
 import Google from './request';  // Ensure this file exports `Google` properly
 import PersonRoute from './routes/person';  // Ensure this file exports router
-
+import path from 'path';
 const app = express();
 const port = 5001;
 
@@ -20,7 +20,7 @@ app.use('/api', router);  // Mounting the /api route
 
 // Basic route for the homepage
 app.get('/', (req, res) => {
-  res.send('Hello, welcome to the homepage');
+  res.sendFile(path.join(__dirname, './views/index.html'));
 });
 
 // Example Google route
