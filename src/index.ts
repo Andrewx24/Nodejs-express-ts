@@ -4,7 +4,9 @@ import axios from 'axios';
 import ani from './routes/hello';  // Ensure this file exports `ani` properly
 import Google from './request';  // Ensure this file exports `Google` properly
 import PersonRoute from './routes/person';  // Ensure this file exports router
+import router from './routes/api';  // Assuming api.ts exists and compiles to api.js
 import path from 'path';
+
 const app = express();
 const port = 5001;
 
@@ -13,14 +15,15 @@ app.use(cors());  // Use CORS for handling cross-origin requests
 
 // Route middlewares
 app.use('/person', PersonRoute);  // Mounting the /person route
-
-// Import the route using ES module syntax (use .js if TypeScript outputs to JS)
-import router from './routes/api';  // Assuming api.ts exists and compiles to api.js
 app.use('/api', router);  // Mounting the /api route
 
 // Basic route for the homepage
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, './views/index.html'));
+});
+
+app.post('/', (req, res) => {
+  res.send(PersonRoute);
 });
 
 // Example Google route
@@ -54,6 +57,12 @@ app.get('/new', (req, res) => {
 // Route for /hello
 app.get('/hello', (req, res) => {
   res.send(ani);
+});
+
+// Error handling middleware
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
 });
 
 // Start the server
