@@ -1,11 +1,26 @@
 import axios from 'axios';
 
-const Google = axios.get('https://www.google.com')
-  .then((res) => {
-    console.log(res.data);
-  })
-  .catch((err) => {
-    console.error('Error fetching data from Google:', err);
-  });
+async function fetchGoogleMetadata() {
+  try {
+    const response = await axios.get('https://www.google.com', {
+      validateStatus: () => true, // This allows us to get metadata even if we get a redirect
+    });
+    
+    const metadata = {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+      contentType: response.headers['content-type'],
+      server: response.headers['server'],
+      date: response.headers['date'],
+      contentLength: response.headers['content-length'],
+    };
 
-export default Google;
+    return metadata;
+  } catch (error) {
+    console.error('Error fetching metadata from Google:', error);
+    throw error;
+  }
+}
+
+export default fetchGoogleMetadata;

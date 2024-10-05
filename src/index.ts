@@ -1,66 +1,52 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import axios from 'axios';
-import ani from './routes/hello';  // Ensure this file exports `ani` properly
-import Google from './request';  // Ensure this file exports `Google` properly
-import PersonRoute from './routes/person';  // Ensure this file exports router
-import router from './routes/api';  // Assuming api.ts exists and compiles to api.js
+import helloRoute from './routes/hello';
+import fetchGoogleMetadata from './request';
+import PersonRoute from './routes/person';
+import router from './routes/api';
 import path from 'path';
+
+// Define type for request body
+type RequestBody = {
+  // Define the structure of your request body
+  [key: string]: unknown;
+};
 
 const app = express();
 const port = 5001;
 
 // Middleware
-app.use(cors());  // Use CORS for handling cross-origin requests
+app.use(cors());
+app.use(express.json());
 
 // Route middlewares
-app.use('/person', PersonRoute);  // Mounting the /person route
-app.use('/api', router);  // Mounting the /api route
+app.use('/person', PersonRoute);
+app.use('/api', router);
 
 // Basic route for the homepage
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, './views/index.html'));
 });
 
-app.post('/', (req, res) => {
-  res.send(PersonRoute);
+app.post('/', (req: Request, res: Response) => {
+  const typedBody = req.body as RequestBody;
+  res.json({ message: helloRoute, ...typedBody });
 });
 
-// Example Google route
-app.get('/google', (req, res) => {
-  res.send(Google);
-});
-
-// Async route for fetching users from external API
-app.get('/fetch-users', async (req, res) => {
+// Updated Google route for metadata
+app.get('/google', async (req: Request, res: Response) => {
   try {
-    const response = await axios.get('https://nextjs-freestyle.vercel.app/api/users');
-    res.json(response.data);  // Send the data to the client
+    const googleMetadata = await fetchGoogleMetadata();
+    res.json(googleMetadata);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch users' });
+    console.error('Error fetching Google metadata:', error);
+    res.status(500).json({ error: 'Failed to fetch Google metadata' });
   }
 });
 
-// Route for /task
-app.get('/task', (req, res) => {
-  res.json({
-    number: 1,  // Typo corrected: "numner" -> "number"
-    message: 'This is the task route',
-  });
-});
-
-// Route for /new
-app.get('/new', (req, res) => {
-  res.send('Hello, welcome to the new page');
-});
-
-// Route for /hello
-app.get('/hello', (req, res) => {
-  res.send(ani);
-});
-
 // Error handling middleware
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).send('Something went wrong!');
 });
@@ -69,4 +55,3 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
